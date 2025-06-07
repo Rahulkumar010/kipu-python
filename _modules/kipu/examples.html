@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kipu.examples &mdash; kipu-python  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kipu-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kipu-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kipu.examples</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kipu.examples</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Example usage of the Kipu API library</span>
+<span class="sd">Demonstrates various API operations and response handling</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.client</span><span class="w"> </span><span class="kn">import</span> <span class="n">KipuClient</span>
+
+
+<div class="viewcode-block" id="KipuExamples">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">KipuExamples</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">access_id</span> <span class="o">=</span> <span class="n">access_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">secret_key</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span> <span class="o">=</span> <span class="n">app_id</span>
+
+<div class="viewcode-block" id="KipuExamples.basic_patient_operations">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.basic_patient_operations">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">basic_patient_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Basic patient operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Get patient census (returns flattened DataFrame by default)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting patient census...&quot;</span><span class="p">)</span>
+            <span class="n">census_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patients_census</span><span class="p">(</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;phi_level&quot;</span><span class="p">:</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;per&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Census DataFrame shape: </span><span class="si">{</span><span class="n">census_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Census columns:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">census_df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+            <span class="c1"># Get specific patient (raw JSON response)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">census_df</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+                <span class="n">patient_id</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">census_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;id&quot;</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="s2">&quot;id&quot;</span> <span class="ow">in</span> <span class="n">census_df</span><span class="o">.</span><span class="n">columns</span>
+                    <span class="k">else</span> <span class="s2">&quot;sample_id&quot;</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting patient </span><span class="si">{</span><span class="n">patient_id</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+                <span class="n">patient_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patient</span><span class="p">(</span>
+                    <span class="n">patient_id</span><span class="p">,</span>
+                    <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;include_ids&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span>
+                    <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Get raw JSON</span>
+                <span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Patient data keys:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">patient_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.medical_records_operations">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.medical_records_operations">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">medical_records_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Medical records operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Get vital signs for all patients</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting all vital signs...&quot;</span><span class="p">)</span>
+            <span class="n">vital_signs_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_vital_signs</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Vital signs DataFrame shape: </span><span class="si">{</span><span class="n">vital_signs_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get patient-specific vital signs</span>
+            <span class="n">patient_id</span> <span class="o">=</span> <span class="s2">&quot;sample_patient_id&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting vital signs for patient </span><span class="si">{</span><span class="n">patient_id</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="n">patient_vitals_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patient_vital_signs</span><span class="p">(</span>
+                <span class="n">patient_id</span><span class="p">,</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span>
+                    <span class="s2">&quot;created_at_start_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;created_at_end_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-12-31&quot;</span><span class="p">,</span>
+                <span class="p">},</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Patient vital signs shape: </span><span class="si">{</span><span class="n">patient_vitals_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get allergies</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting all allergies...&quot;</span><span class="p">)</span>
+            <span class="n">allergies_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_allergies</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Allergies DataFrame shape: </span><span class="si">{</span><span class="n">allergies_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.appointment_operations">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.appointment_operations">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">appointment_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Appointment operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Get all appointments with date range</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting appointments...&quot;</span><span class="p">)</span>
+            <span class="n">appointments_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_scheduler_appointments</span><span class="p">(</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;start_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-01-01&quot;</span><span class="p">,</span> <span class="s2">&quot;end_date&quot;</span><span class="p">:</span> <span class="s2">&quot;2024-12-31&quot;</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Appointments DataFrame shape: </span><span class="si">{</span><span class="n">appointments_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get appointment types</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting appointment types...&quot;</span><span class="p">)</span>
+            <span class="n">types_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_scheduler_appointment_types</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Appointment types shape: </span><span class="si">{</span><span class="n">types_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get appointment statuses</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting appointment statuses...&quot;</span><span class="p">)</span>
+            <span class="n">statuses_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_scheduler_appointment_statuses</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Appointment statuses shape: </span><span class="si">{</span><span class="n">statuses_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.administrative_operations">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.administrative_operations">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">administrative_operations</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Administrative operations</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Get locations</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting locations...&quot;</span><span class="p">)</span>
+            <span class="n">locations_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_locations</span><span class="p">(</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;include_buildings&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Locations DataFrame shape: </span><span class="si">{</span><span class="n">locations_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get users</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting users...&quot;</span><span class="p">)</span>
+            <span class="n">users_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_users</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Users DataFrame shape: </span><span class="si">{</span><span class="n">users_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get providers</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting providers...&quot;</span><span class="p">)</span>
+            <span class="n">providers_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_providers</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Providers DataFrame shape: </span><span class="si">{</span><span class="n">providers_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># Get roles</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting roles...&quot;</span><span class="p">)</span>
+            <span class="n">roles_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_roles</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Roles DataFrame shape: </span><span class="si">{</span><span class="n">roles_df</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.create_patient_example">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.create_patient_example">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_patient_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Creating a new patient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Patient data structure</span>
+            <span class="n">patient_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;recipient_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Doe&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;dob&quot;</span><span class="p">:</span> <span class="s2">&quot;1990-01-01&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;M&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;address_street&quot;</span><span class="p">:</span> <span class="s2">&quot;123 Main St&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;address_city&quot;</span><span class="p">:</span> <span class="s2">&quot;New York&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;state&quot;</span><span class="p">:</span> <span class="s2">&quot;NY&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;address_zip&quot;</span><span class="p">:</span> <span class="s2">&quot;10001&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;phone&quot;</span><span class="p">:</span> <span class="s2">&quot;(555) 123-4567&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;john.doe@example.com&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Create patient</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Creating new patient...&quot;</span><span class="p">)</span>
+            <span class="n">created_patient</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_patient</span><span class="p">(</span><span class="n">patient_data</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created patient ID:&quot;</span><span class="p">,</span> <span class="n">created_patient</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">created_patient</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.create_vital_signs_example">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.create_vital_signs_example">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">create_vital_signs_example</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">patient_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Creating vital signs for a patient</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Vital signs data</span>
+            <span class="n">vital_signs_data</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;document&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="s2">&quot;recipient_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">,</span>
+                    <span class="s2">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;systolic_blood_pressure&quot;</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+                        <span class="s2">&quot;diastolic_blood_pressure&quot;</span><span class="p">:</span> <span class="mi">80</span><span class="p">,</span>
+                        <span class="s2">&quot;heart_rate&quot;</span><span class="p">:</span> <span class="mi">72</span><span class="p">,</span>
+                        <span class="s2">&quot;temperature&quot;</span><span class="p">:</span> <span class="mf">98.6</span><span class="p">,</span>
+                        <span class="s2">&quot;respiratory_rate&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+                        <span class="s2">&quot;oxygen_saturation&quot;</span><span class="p">:</span> <span class="mi">99</span><span class="p">,</span>
+                        <span class="s2">&quot;weight&quot;</span><span class="p">:</span> <span class="mf">150.5</span><span class="p">,</span>
+                        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="mi">70</span><span class="p">,</span>
+                        <span class="s2">&quot;comments&quot;</span><span class="p">:</span> <span class="s2">&quot;Normal vital signs&quot;</span><span class="p">,</span>
+                    <span class="p">},</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1"># Create vital signs</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating vital signs for patient </span><span class="si">{</span><span class="n">patient_id</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+            <span class="n">created_vitals</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">create_patient_vital_signs</span><span class="p">(</span>
+                <span class="n">patient_id</span><span class="p">,</span> <span class="n">vital_signs_data</span><span class="p">,</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Created vital signs ID:&quot;</span><span class="p">,</span> <span class="n">created_vitals</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.error_handling_example">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.error_handling_example">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">error_handling_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Error handling</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">KipuAPIError</span><span class="p">,</span> <span class="n">KipuNotFoundError</span>
+
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try to get a non-existent patient</span>
+                <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patient</span><span class="p">(</span><span class="s2">&quot;non_existent_id&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">KipuNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Patient not found: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status code: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="n">KipuAPIError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;API error: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Status code: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">status_code</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Response data: </span><span class="si">{</span><span class="n">e</span><span class="o">.</span><span class="n">response_data</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.flattening_comparison_example">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.flattening_comparison_example">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">flattening_comparison_example</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Example: Comparing flattened vs raw responses</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">KipuClient</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span><span class="p">)</span> <span class="k">as</span> <span class="n">client</span><span class="p">:</span>
+
+            <span class="c1"># Get raw JSON response</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Getting raw patient data...&quot;</span><span class="p">)</span>
+            <span class="n">raw_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patients_census</span><span class="p">(</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;per&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Raw data type:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">raw_data</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="s2">&quot;Raw data structure:&quot;</span><span class="p">,</span>
+                <span class="p">(</span>
+                    <span class="nb">list</span><span class="p">(</span><span class="n">raw_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+                    <span class="k">else</span> <span class="s2">&quot;List of records&quot;</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Get flattened DataFrame</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Getting flattened patient data...&quot;</span><span class="p">)</span>
+            <span class="n">flattened_df</span> <span class="o">=</span> <span class="k">await</span> <span class="n">client</span><span class="o">.</span><span class="n">get_patients_census</span><span class="p">(</span>
+                <span class="n">params</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;per&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span> <span class="n">flatten</span><span class="o">=</span><span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Flattened data type:&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="p">(</span><span class="n">flattened_df</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataFrame shape:&quot;</span><span class="p">,</span> <span class="n">flattened_df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataFrame columns:&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">flattened_df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="KipuExamples.run_all_examples">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.KipuExamples.run_all_examples">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">run_all_examples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Run all examples</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KIPU API library EXAMPLES&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Basic operations</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">basic_patient_operations</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># Medical records</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">medical_records_operations</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># Appointments</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">appointment_operations</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># Administrative</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">administrative_operations</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># Error handling</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">error_handling_example</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># Flattening comparison</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">flattening_comparison_example</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">60</span><span class="p">)</span>
+
+            <span class="c1"># # Create operations (commented out for safety)</span>
+            <span class="c1"># patient_id = await self.create_patient_example()</span>
+            <span class="c1"># if patient_id:</span>
+            <span class="c1">#     await self.create_vital_signs_example(patient_id)</span>
+
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Example execution error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Examples completed!&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="c1"># Usage example</span>
+<div class="viewcode-block" id="main">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.examples.main">[docs]</a>
+<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># Initialize with your credentials</span>
+    <span class="n">examples</span> <span class="o">=</span> <span class="n">KipuExamples</span><span class="p">(</span>
+        <span class="n">access_id</span><span class="o">=</span><span class="s2">&quot;your_access_id&quot;</span><span class="p">,</span>
+        <span class="n">secret_key</span><span class="o">=</span><span class="s2">&quot;your_secret_key&quot;</span><span class="p">,</span>
+        <span class="n">app_id</span><span class="o">=</span><span class="s2">&quot;your_app_id&quot;</span><span class="p">,</span>  <span class="c1"># nosec</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Run all examples</span>
+    <span class="k">await</span> <span class="n">examples</span><span class="o">.</span><span class="n">run_all_examples</span><span class="p">()</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahulkumar010.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

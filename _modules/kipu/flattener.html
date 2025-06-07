@@ -1,0 +1,231 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kipu.flattener &mdash; kipu-python  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kipu-python
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api/modules.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kipu-python</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kipu.flattener</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kipu.flattener</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">JSON Flattener for Kipu API responses</span>
+<span class="sd">Handles deeply nested JSON structures and converts them to flat pandas DataFrames</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">concurrent.futures</span><span class="w"> </span><span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm_asyncio</span>
+
+
+<div class="viewcode-block" id="JsonFlattener">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.flattener.JsonFlattener">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">JsonFlattener</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
+
+<div class="viewcode-block" id="JsonFlattener.flatten_json">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.flattener.JsonFlattener.flatten_json">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">flatten_json</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">parent_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Recursive function to flatten the JSON object and build the records in a cartesian product style.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="p">{}</span>
+        <span class="p">]</span>  <span class="c1"># Start with a single empty record (to accumulate parent values)</span>
+
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">new_key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">parent_key</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="si">}{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">parent_key</span> <span class="k">else</span> <span class="n">key</span>
+
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="c1"># Flatten nested dictionaries</span>
+                <span class="n">nested_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten_json</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">new_key</span><span class="p">)</span>
+                <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_records</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">nested_records</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="c1"># Handle lists of dictionaries or primitives</span>
+                <span class="n">list_records</span> <span class="o">=</span> <span class="p">[{}]</span>
+                <span class="k">for</span> <span class="n">sub_item</span> <span class="ow">in</span> <span class="n">value</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sub_item</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                        <span class="c1"># Recursively flatten nested dictionaries within the list</span>
+                        <span class="n">sub_item_records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten_json</span><span class="p">(</span><span class="n">sub_item</span><span class="p">,</span> <span class="n">new_key</span><span class="p">)</span>
+                        <span class="n">list_records</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">sub_item_records</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Handle non-dictionary values (e.g., strings, numbers) within lists</span>
+                        <span class="n">list_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                            <span class="p">{</span><span class="n">new_key</span><span class="p">:</span> <span class="n">sub_item</span><span class="p">}</span>
+                        <span class="p">)</span>  <span class="c1"># Create a dict with the value</span>
+
+                <span class="c1"># Merge the list records with the parent records</span>
+                <span class="k">if</span> <span class="p">{}</span> <span class="ow">in</span> <span class="n">list_records</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">list_records</span><span class="o">.</span><span class="n">remove</span><span class="p">({})</span>
+                <span class="n">records</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_merge_records</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">list_records</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Handle simple key-value pairs</span>
+                <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">records</span><span class="p">:</span>
+                    <span class="n">record</span><span class="p">[</span><span class="n">new_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="p">{}</span> <span class="ow">in</span> <span class="n">records</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">records</span><span class="o">.</span><span class="n">remove</span><span class="p">({})</span>
+
+        <span class="k">return</span> <span class="n">records</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_merge_records</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">parent_records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]],</span> <span class="n">child_records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merge the child records with each of the parent records to create a cartesian product style of flattening.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">merged_records</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[{}]</span>
+
+        <span class="k">for</span> <span class="n">parent</span> <span class="ow">in</span> <span class="n">parent_records</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="n">child_records</span><span class="p">:</span>
+                <span class="n">merged_record</span> <span class="o">=</span> <span class="n">parent</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Copy parent to avoid modifying original</span>
+                <span class="n">merged_record</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>  <span class="c1"># Merge with child</span>
+                <span class="n">merged_records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">merged_record</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">{}</span> <span class="ow">in</span> <span class="n">merged_records</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">merged_records</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">merged_records</span><span class="o">.</span><span class="n">remove</span><span class="p">({})</span>
+
+        <span class="k">return</span> <span class="n">merged_records</span>
+
+    <span class="c1"># Asynchronous function to flatten each record in parallel using ThreadPoolExecutor</span>
+<div class="viewcode-block" id="JsonFlattener.flatten_json_df">
+<a class="viewcode-back" href="../../api/kipu.html#kipu.flattener.JsonFlattener.flatten_json_df">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">flatten_json_df</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_event_loop</span><span class="p">()</span>
+
+        <span class="c1"># Use ThreadPoolExecutor for CPU-bound flattening operations</span>
+        <span class="k">with</span> <span class="n">ThreadPoolExecutor</span><span class="p">()</span> <span class="k">as</span> <span class="n">executor</span><span class="p">:</span>
+            <span class="n">futures</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span><span class="n">executor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">flatten_json</span><span class="p">,</span> <span class="n">record</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">record</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Processing Flatten futures&quot;</span><span class="p">)</span>
+            <span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">tqdm_asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+                <span class="o">*</span><span class="n">futures</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Gathering Flatten futures&quot;</span>
+            <span class="p">)</span>
+
+        <span class="c1"># Convert results to DataFrame</span>
+        <span class="n">df_tmp</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">flat_data_dict</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">flat_data_dict</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;Converting Dict to DataFrames&quot;</span><span class="p">)</span>
+        <span class="p">]</span>
+        <span class="n">master_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">df_tmp</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">master_df</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">pd</span><span class="o">.</span><span class="n">NA</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;None&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;&lt;NA&gt;&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;nan&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">},</span>
+            <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">master_df</span> <span class="o">=</span> <span class="n">master_df</span><span class="p">[</span><span class="o">~</span><span class="n">master_df</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="n">master_df</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Rahulkumar010.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
