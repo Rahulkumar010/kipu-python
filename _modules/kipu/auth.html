@@ -7,14 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>kipu.auth &mdash; kipu-python  documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
 
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
       <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-      <script src="../../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
@@ -88,7 +88,7 @@
 <div class="viewcode-block" id="KipuAuth">
 <a class="viewcode-back" href="../../api/kipu.html#kipu.auth.KipuAuth">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">KipuAuth</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">secret_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">app_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">version</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initialize Kipu authentication</span>
 
@@ -96,10 +96,12 @@
 <span class="sd">            access_id: Your access ID provided by Kipu</span>
 <span class="sd">            secret_key: Your secret key provided by Kipu</span>
 <span class="sd">            app_id: Your app ID (also called recipient_id) provided by Kipu</span>
+<span class="sd">            version: API version (3 for SHA1, 4 for SHA256)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">access_id</span> <span class="o">=</span> <span class="n">access_id</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="n">secret_key</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app_id</span> <span class="o">=</span> <span class="n">app_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">version</span>
 
 <div class="viewcode-block" id="KipuAuth.generate_signature">
 <a class="viewcode-back" href="../../api/kipu.html#kipu.auth.KipuAuth.generate_signature">[docs]</a>
@@ -112,7 +114,8 @@
         <span class="n">content_md5</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Generate HMAC SHA-256 signature for Kipu API request</span>
+<span class="sd">        Generate HMAC signature for Kipu API request</span>
+<span class="sd">        Uses SHA1 for API v3, SHA256 for API v4</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            method: HTTP method (GET, POST, PATCH)</span>
@@ -122,7 +125,7 @@
 <span class="sd">            content_md5: MD5 hash of request body (for POST requests)</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">            Base64 encoded HMAC SHA1 signature</span>
+<span class="sd">            Base64 encoded HMAC signature (algorithm depends on version)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># Build canonical string based on method</span>
         <span class="k">if</span> <span class="n">method</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;GET&quot;</span><span class="p">:</span>
@@ -136,7 +139,7 @@
         <span class="n">hmac_hash</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
             <span class="n">canonical_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
-            <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">,</span>
+            <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">&lt;=</span><span class="mi">3</span> <span class="k">else</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Base64 encode the hash</span>
@@ -175,11 +178,12 @@
         <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_signature</span><span class="p">(</span>
             <span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">content_md5</span>
         <span class="p">)</span>
+        <span class="n">auth_type</span> <span class="o">=</span> <span class="s1">&#39;APIAuth&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">&lt;=</span><span class="mi">3</span> <span class="k">else</span> <span class="s1">&#39;APIAuth-HMAC-SHA256&#39;</span>
 
         <span class="c1"># Build headers</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="s2">&quot;application/vnd.kipusystems+json; version=3&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;APIAuth </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">signature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Accept&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;application/vnd.kipusystems+json; version=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Authorization&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">auth_type</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">access_id</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">signature</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
             <span class="s2">&quot;Date&quot;</span><span class="p">:</span> <span class="n">date</span><span class="p">,</span>
         <span class="p">}</span>
 
