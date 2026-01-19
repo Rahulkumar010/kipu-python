@@ -66,7 +66,7 @@ docs:  ## Build documentation
 	sphinx-build -M html docs docs/_build
 
 docs-serve:  ## Serve documentation locally
-	cd docs && make livehtml
+	sphinx-autobuild docs docs/_build/html
 
 all: clean install-dev lint security test build check-build  ## Run all checks and build
 
@@ -89,11 +89,13 @@ bump-minor:  ## Bump minor version (0.0.2 → 0.1.0)
 bump-major:  ## Bump major version (0.0.2 → 1.0.0)
 	python scripts/bump_version.py major
 
-release-prep: changelog docs  ## Prepare for release
+release-prep:  ## Prepare for release (cross-platform)
+	python scripts/sync_changelog.py
+	sphinx-build -M html docs docs/_build
 	@echo "✅ Release preparation complete!"
 	@echo "📝 Next steps:"
 	@echo "   1. Review CHANGELOG.md"
 	@echo "   2. git commit -am 'chore: prepare release'"
-	@echo "   3. git tag v$$(python -c 'from kipu import __version__; print(__version__)')"
+	@echo "   3. git tag vX.X.X"
 	@echo "   4. git push --tags"
 

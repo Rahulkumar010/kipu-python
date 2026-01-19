@@ -60,7 +60,7 @@ class KipuAuth:
         hmac_hash = hmac.new(
             self.secret_key.encode("utf-8"),
             canonical_string.encode("utf-8"),
-            hashlib.sha1 if self.version<=3 else hashlib.sha256,
+            hashlib.sha1 if self.version <= 3 else hashlib.sha256,
         )
 
         # Base64 encode the hash
@@ -96,7 +96,7 @@ class KipuAuth:
         signature = self.generate_signature(
             method, uri, date, content_type, content_md5
         )
-        auth_type = 'APIAuth' if self.version<=3 else 'APIAuth-HMAC-SHA256'
+        auth_type = "APIAuth" if self.version <= 3 else "APIAuth-HMAC-SHA256"
 
         # Build headers
         headers = {

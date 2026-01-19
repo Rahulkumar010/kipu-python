@@ -125,4 +125,3 @@ class TestKipuAuth:
         assert "APIAuth " in headers["Authorization"]
         assert "APIAuth-HMAC-SHA256" not in headers["Authorization"]
         assert headers["Accept"] == "application/vnd.kipusystems+json; version=3"
-

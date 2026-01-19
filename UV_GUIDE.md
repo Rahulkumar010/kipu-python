@@ -174,7 +174,11 @@ make release-prep            # Sync docs
 git push --tags              # CI handles the rest
 ```
 
-## Windows Troubleshooting
+## Windows Known Issues
+
+> ⚠️ **`make release-prep` does NOT work on Windows CMD**
+>
+> Due to a GNU Make limitation on Windows, the `make release-prep` command fails with a Sphinx builder error. Use the batch script instead.
 
 ### `make release-prep` Sphinx Error
 
@@ -184,14 +188,20 @@ Sphinx error:
 Builder name release-prep not registered or available through entry point
 ```
 
-**Cause**: Windows CMD doesn't handle nested Makefile calls correctly.
+**Cause**: Windows CMD + GNU Make don't handle compound targets correctly.
 
-**Solution**: Run the commands separately:
+**Solution**: Use the provided batch script instead:
 ```bash
-# Step 1: Sync changelog
-python scripts/sync_changelog.py
+# Windows
+scripts\release-prep.bat
 
-# Step 2: Build docs
+# Unix/Linux/macOS
+./scripts/release-prep.sh
+```
+
+Or run commands manually:
+```bash
+python scripts/sync_changelog.py
 sphinx-build -M html docs docs/_build
 ```
 

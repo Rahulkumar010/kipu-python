@@ -51,8 +51,7 @@ class BaseKipuClient:
         # Explicit SSL verification for security
         connector = aiohttp.TCPConnector(ssl=True)
         self.session = aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout),
-            connector=connector
+            timeout=aiohttp.ClientTimeout(total=self.timeout), connector=connector
         )
         return self
 
