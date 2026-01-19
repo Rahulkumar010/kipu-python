@@ -141,7 +141,7 @@
         <span class="n">hmac_hash</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">secret_key</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
             <span class="n">canonical_string</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
-            <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">&lt;=</span><span class="mi">3</span> <span class="k">else</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">,</span>
+            <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">,</span>
         <span class="p">)</span>
 
         <span class="c1"># Base64 encode the hash</span>
@@ -180,7 +180,7 @@
         <span class="n">signature</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_signature</span><span class="p">(</span>
             <span class="n">method</span><span class="p">,</span> <span class="n">uri</span><span class="p">,</span> <span class="n">date</span><span class="p">,</span> <span class="n">content_type</span><span class="p">,</span> <span class="n">content_md5</span>
         <span class="p">)</span>
-        <span class="n">auth_type</span> <span class="o">=</span> <span class="s1">&#39;APIAuth&#39;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="o">&lt;=</span><span class="mi">3</span> <span class="k">else</span> <span class="s1">&#39;APIAuth-HMAC-SHA256&#39;</span>
+        <span class="n">auth_type</span> <span class="o">=</span> <span class="s2">&quot;APIAuth&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="k">else</span> <span class="s2">&quot;APIAuth-HMAC-SHA256&quot;</span>
 
         <span class="c1"># Build headers</span>
         <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
