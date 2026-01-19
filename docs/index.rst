@@ -11,6 +11,7 @@ kipu-python is an open-source Python library for seamless integration with the K
 
    installation
    usage
+   security
    contributing
    changelog
    api/modules
