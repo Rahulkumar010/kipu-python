@@ -46,10 +46,18 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="security.html">Security</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.0.1 (2025-06-07)</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#id1">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">[0.0.2] - 2026-01-19</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#added">Added</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#changed">Changed</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fixed">Fixed</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">[0.0.1] - 2025-01-19</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Added</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#security">Security</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#dependencies">Dependencies</a></li>
@@ -93,29 +101,62 @@
              
   <section id="changelog">
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
+</section>
+<section id="id1">
+<h1>Changelog<a class="headerlink" href="#id1" title="Link to this heading"></a></h1>
 <p>All notable changes to the Kipu API Python library will be documented in this file.</p>
 <p>The format is based on <a class="reference external" href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>,
 and this project adheres to <a class="reference external" href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<section id="id1">
-<h2>0.0.1 (2025-06-07)<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
+<section id="id2">
+<h2>[0.0.2] - 2026-01-19<a class="headerlink" href="#id2" title="Link to this heading"></a></h2>
 <section id="added">
 <h3>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>🔒 <strong>SECURITY.md</strong>: Comprehensive security documentation for HIPAA compliance</p></li>
+<li><p>🧪 <strong>V4 Authentication Tests</strong>: Added tests for SHA256 authentication (API v4)</p></li>
+<li><p>✅ <strong>Enhanced Test Coverage</strong>: Added 3 new tests for V3/V4 authentication verification</p></li>
+</ul>
+</section>
+<section id="changed">
+<h3>Changed<a class="headerlink" href="#changed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>📝 <strong>Documentation Improvements</strong>:</p>
 <ul>
-<li><p>Initial release of the Kipu API Python library</p></li>
-<li><p>Complete implementation of all 80+ Kipu API V3 endpoints</p></li>
-<li><p>HMAC SHA1 authentication with automatic signature generation</p></li>
-<li><p>Automatic JSON flattening to pandas DataFrames using recursive algorithm</p></li>
-<li><p>Async/await support for high-performance API calls</p></li>
-<li><p>Comprehensive error handling with custom exception hierarchy</p></li>
-<li><p>Full type hints for better IDE support and development experience</p></li>
-<li><p>Flexible response format (raw JSON or flattened DataFrames)</p></li>
-<li><p>PyPI package distribution with proper metadata</p></li>
-<li><p>Complete test suite with validation</p></li>
-<li><p>Comprehensive documentation and examples</p></li>
-<li><p>Command-line interface (CLI) for testing and utilities</p></li>
-<li><p>Healthcare-focused API coverage including:</p>
-<blockquote>
-<div><ul class="simple">
+<li><p>Fixed syntax error in README.md code example</p></li>
+<li><p>Simplified kipu/README.md to avoid duplication</p></li>
+<li><p>Enhanced auth.py docstrings to clarify V3 (SHA1) and V4 (SHA256) support</p></li>
+</ul>
+</li>
+<li><p>🔐 <strong>Security Enhancements</strong>: Added explicit SSL verification in HTTP client</p></li>
+</ul>
+</section>
+<section id="fixed">
+<h3>Fixed<a class="headerlink" href="#fixed" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>🐛 <strong>Test Fixes</strong>: Added missing version parameter to all KipuAuth test initializations</p></li>
+</ul>
+</section>
+</section>
+<hr class="docutils" />
+<section id="id3">
+<h2>[0.0.1] - 2025-01-19<a class="headerlink" href="#id3" title="Link to this heading"></a></h2>
+<section id="id4">
+<h3>Added<a class="headerlink" href="#id4" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p>🎉 Initial release of the Kipu API Python library</p></li>
+<li><p>✅ Complete implementation of all 80+ Kipu API V3 endpoints</p></li>
+<li><p>🔐 HMAC SHA1 authentication with automatic signature generation</p></li>
+<li><p>📊 Automatic JSON flattening to pandas DataFrames using recursive algorithm</p></li>
+<li><p>⚡ Async/await support for high-performance API calls</p></li>
+<li><p>🛡️ Comprehensive error handling with custom exception hierarchy</p></li>
+<li><p>📝 Full type hints for better IDE support and development experience</p></li>
+<li><p>🔄 Flexible response format (raw JSON or flattened DataFrames)</p></li>
+<li><p>📦 PyPI package distribution with proper metadata</p></li>
+<li><p>🧪 Complete test suite with validation</p></li>
+<li><p>📚 Comprehensive documentation and examples</p></li>
+<li><p>🖥️ Command-line interface (CLI) for testing and utilities</p></li>
+<li><p>🏥 Healthcare-focused API coverage including:</p>
+<ul>
 <li><p>Patient management (CRUD operations)</p></li>
 <li><p>Medical records (vital signs, allergies, assessments)</p></li>
 <li><p>Appointments and scheduling</p></li>
@@ -125,26 +166,25 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>Insurance and billing</p></li>
 <li><p>Group sessions and care teams</p></li>
 </ul>
-</div></blockquote>
 </li>
 </ul>
 </section>
 <section id="security">
 <h3>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Secure HMAC SHA1 signature generation</p></li>
-<li><p>Proper handling of sensitive healthcare data</p></li>
-<li><p>Environment variable-based credential management</p></li>
+<li><p>🔒 Secure HMAC SHA1 signature generation</p></li>
+<li><p>🛡️ Proper handling of sensitive healthcare data</p></li>
+<li><p>🔐 Environment variable-based credential management</p></li>
 </ul>
 </section>
 <section id="documentation">
 <h3>Documentation<a class="headerlink" href="#documentation" title="Link to this heading"></a></h3>
 <ul class="simple">
-<li><p>Complete README with usage examples</p></li>
-<li><p>API reference documentation</p></li>
-<li><p>Quick start guide</p></li>
-<li><p>Code examples for all major use cases</p></li>
-<li><p>Testing and development guidelines</p></li>
+<li><p>📖 Complete README with usage examples</p></li>
+<li><p>📚 API reference documentation</p></li>
+<li><p>🚀 Quick start guide</p></li>
+<li><p>💡 Code examples for all major use cases</p></li>
+<li><p>🧪 Testing and development guidelines</p></li>
 </ul>
 </section>
 <section id="dependencies">
@@ -180,9 +220,9 @@ and this project adheres to <a class="reference external" href="https://semver.o
 <li><p>Raw JSON or flattened DataFrame output options</p></li>
 <li><p>Environment variable credential management</p></li>
 </ul>
-<p>—</p>
 </section>
 </section>
+<hr class="docutils" />
 <section id="development-notes">
 <h2>Development Notes<a class="headerlink" href="#development-notes" title="Link to this heading"></a></h2>
 <section id="version-0-0-1-implementation-details">
