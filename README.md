@@ -58,7 +58,22 @@ The library handles HMAC SHA1 signature generation automatically. You need three
 - `access_id`: Your API access identifier
 - `secret_key`: Your secret key for signature generation
 - `app_id`: Your application ID (also called recipient_id)
-- `version`: Your API version
+- `version`: API version (3 for SHA1, 4 for SHA256)
+
+### API Version Support
+
+The library supports both Kipu API v3 and v4:
+
+- **V3**: Uses HMAC-SHA1 authentication (default, most stable)
+- **V4**: Uses HMAC-SHA256 authentication (newer, more secure)
+
+```python
+# Use V3 (SHA1)
+client_v3 = KipuClient(access_id, secret_key, app_id, version=3)
+
+# Use V4 (SHA256 - recommended for new integrations)
+client_v4 = KipuClient(access_id, secret_key, app_id, version=4)
+```
 
 ## 📚 API Coverage
 
@@ -238,23 +253,23 @@ client.get_glucose_logs()
 
 ## 🧪 Development & Testing
 
+### Quick Setup
 ```bash
-# Clone the repository
-git clone https://github.com/Rahulkumar010/kipu-python.git
+# Clone and install
+git clone [https://github.com/Rahulkumar010/kipu-python.git](https://github.com/Rahulkumar010/kipu-python.git)
 cd kipu-python
 
-# Install development dependencies
+# Traditional
 pip install -e ".[dev]"
 
-# Run tests
-pytest
+# Fast with UV (10x faster!)
+pip install uv && uv pip install -e ".[dev]"
 
-# Format code
-black kipu/
-isort kipu/
-
-# Type checking
-mypy kipu/
+make test         # Run tests
+make format       # Format code
+make lint         # Check quality
+make version      # Show version
+make bump-patch   # Bump version
 ```
 
 ## 📄 Requirements
@@ -268,11 +283,19 @@ mypy kipu/
 
 ## 🤝 Contributing
 
+Welcome contributions! Here's the quick process:
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes and add tests
+4. Run quality checks: `make lint` and `make test`
+5. Commit your changes (`git commit -m 'Add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
+
+**For detailed guidelines**, see [CONTRIBUTING.md](CONTRIBUTING.md)
+
+**For faster development**, use UV: See [UV_GUIDE.md](UV_GUIDE.md)
 
 ## 📃 License
 

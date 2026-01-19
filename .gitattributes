@@ -1,0 +1,2 @@
+# Specifically preserve LF in lockfiles
+uv.lock text eol=lf

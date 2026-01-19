@@ -11,7 +11,7 @@ CLEAN_CMD = \
 	find . -type f -name "*.pyc" -delete
 endif
 
-.PHONY: help install install-dev test lint format security clean build upload docs
+.PHONY: help install install-dev test lint format security clean build upload docs version changelog bump-patch bump-minor bump-major release-prep
 
 help:  ## Show this help message
 	@echo 'Usage: make [target]'
@@ -63,7 +63,7 @@ upload:  ## Upload to PyPI
 	twine upload dist/*
 
 docs:  ## Build documentation
-	cd docs && make html
+	sphinx-build -M html docs docs/_build
 
 docs-serve:  ## Serve documentation locally
 	cd docs && make livehtml
@@ -71,3 +71,29 @@ docs-serve:  ## Serve documentation locally
 all: clean install-dev lint security test build check-build  ## Run all checks and build
 
 ci: lint security test  ## Run CI checks
+
+# ===== Automation Commands =====
+
+version:  ## Show current version
+	@python -c "from kipu import __version__; print(f'Current version: {__version__}')"
+
+changelog:  ## Sync CHANGELOG.md to docs/changelog.rst
+	python scripts/sync_changelog.py
+
+bump-patch:  ## Bump patch version (0.0.2 → 0.0.3)
+	python scripts/bump_version.py patch
+
+bump-minor:  ## Bump minor version (0.0.2 → 0.1.0)
+	python scripts/bump_version.py minor
+
+bump-major:  ## Bump major version (0.0.2 → 1.0.0)
+	python scripts/bump_version.py major
+
+release-prep: changelog docs  ## Prepare for release
+	@echo "✅ Release preparation complete!"
+	@echo "📝 Next steps:"
+	@echo "   1. Review CHANGELOG.md"
+	@echo "   2. git commit -am 'chore: prepare release'"
+	@echo "   3. git tag v$$(python -c 'from kipu import __version__; print(__version__)')"
+	@echo "   4. git push --tags"
+

@@ -4,6 +4,19 @@ Setup configuration for the Kipu API Python library
 
 from setuptools import setup, find_packages
 import os
+import re
+
+# Read version from kipu/__init__.py without importing (avoids build isolation issues)
+def get_version():
+    init_path = os.path.join(os.path.dirname(__file__), 'kipu', '__init__.py')
+    with open(init_path, 'r', encoding='utf-8') as f:
+        content = f.read()
+    match = re.search(r'__version__\s*=\s*["\']([^"\']+)["\']', content)
+    if match:
+        return match.group(1)
+    raise RuntimeError("Unable to find version string in kipu/__init__.py")
+
+__version__ = get_version()
 
 # Read the README file for long description
 def read_readme():
@@ -19,7 +32,7 @@ def read_requirements():
 
 setup(
     name="kipu-python",
-    version="0.0.2",
+    version=__version__,  # Dynamic version from kipu/__init__.py
     author="Rahul",
     author_email="rahul01110100@gmail.com",
     description="The Kipu Python library provides convenient access to the Kipu API (V3) from any Python 3.8+ application. The library includes HMAC SHA1 authentication, recursive JSON flattening capabilities and type definitions for most of the request params and response fields, and offers asynchronous clients powered by [asyncio].",

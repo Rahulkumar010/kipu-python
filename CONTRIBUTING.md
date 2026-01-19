@@ -24,8 +24,21 @@ Thank you for your interest in contributing to the Kipu API Python library! This
    ```
 
 3. **Install Development Dependencies**
+   
+   **Traditional (pip)**:
    ```bash
    pip install -e ".[dev]"
+   ```
+   
+   **Fast (UV - recommended)**: 10x faster!
+   ```bash
+   pip install uv
+   uv pip install -e ".[dev]"
+   ```
+   
+   Or use Makefile:
+   ```bash
+   make install-dev
    ```
 
 4. **Install Pre-commit Hooks**

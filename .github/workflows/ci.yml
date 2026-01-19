@@ -26,7 +26,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e ".[dev]"
+        pip install uv  # Install UV
+        uv pip install -e ".[dev]"  # Use UV for fast installation
     
     - name: Lint with flake8
       run: |

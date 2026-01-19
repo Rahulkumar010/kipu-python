@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.2"]
+requires = ["setuptools>=45", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -50,12 +50,15 @@ dev = [
     "isort>=5.10.0",
     "flake8>=4.0.0",
     "mypy>=0.950",
+    "m2r2",
     "pre-commit>=2.15.0",
 ]
 docs = [
     "sphinx>=4.0.0",
     "sphinx-rtd-theme>=1.0.0",
     "sphinx-autodoc-typehints>=1.12.0",
+    "myst-parser",
+    "linkify-it-py",
 ]
 
 [project.urls]
