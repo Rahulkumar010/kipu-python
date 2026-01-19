@@ -11,7 +11,7 @@ from typing import Dict
 
 
 class KipuAuth:
-    def __init__(self, access_id: str, secret_key: str, app_id: str):
+    def __init__(self, access_id: str, secret_key: str, app_id: str, version: int):
         """
         Initialize Kipu authentication
 
@@ -19,10 +19,12 @@ class KipuAuth:
             access_id: Your access ID provided by Kipu
             secret_key: Your secret key provided by Kipu
             app_id: Your app ID (also called recipient_id) provided by Kipu
+            version: API version (3 for SHA1, 4 for SHA256)
         """
         self.access_id = access_id
         self.secret_key = secret_key
         self.app_id = app_id
+        self.version = version
 
     def generate_signature(
         self,
@@ -33,7 +35,8 @@ class KipuAuth:
         content_md5: str = "",
     ) -> str:
         """
-        Generate HMAC SHA-256 signature for Kipu API request
+        Generate HMAC signature for Kipu API request
+        Uses SHA1 for API v3, SHA256 for API v4
 
         Args:
             method: HTTP method (GET, POST, PATCH)
@@ -43,7 +46,7 @@ class KipuAuth:
             content_md5: MD5 hash of request body (for POST requests)
 
         Returns:
-            Base64 encoded HMAC SHA1 signature
+            Base64 encoded HMAC signature (algorithm depends on version)
         """
         # Build canonical string based on method
         if method.upper() == "GET":
@@ -57,7 +60,7 @@ class KipuAuth:
         hmac_hash = hmac.new(
             self.secret_key.encode("utf-8"),
             canonical_string.encode("utf-8"),
-            hashlib.sha1,
+            hashlib.sha1 if self.version<=3 else hashlib.sha256,
         )
 
         # Base64 encode the hash
@@ -93,11 +96,12 @@ class KipuAuth:
         signature = self.generate_signature(
             method, uri, date, content_type, content_md5
         )
+        auth_type = 'APIAuth' if self.version<=3 else 'APIAuth-HMAC-SHA256'
 
         # Build headers
         headers = {
-            "Accept": "application/vnd.kipusystems+json; version=3",
-            "Authorization": f"APIAuth {self.access_id}:{signature}",
+            "Accept": f"application/vnd.kipusystems+json; version={self.version}",
+            "Authorization": f"{auth_type} {self.access_id}:{signature}",
             "Date": date,
         }
 

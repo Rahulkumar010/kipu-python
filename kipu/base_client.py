@@ -27,6 +27,7 @@ class BaseKipuClient:
         secret_key: str,
         app_id: str,
         base_url: str = "https://api.kipuapi.com",
+        version: int = 3,
         timeout: int = 30,
     ):
         """
@@ -37,17 +38,21 @@ class BaseKipuClient:
             secret_key: Your secret key provided by Kipu
             app_id: Your app ID provided by Kipu
             base_url: Base URL for Kipu API (default: https://api.kipuapi.com)
+            version: API version (3 for SHA1, 4 for SHA256)
             timeout: Request timeout in seconds
         """
         self.base_url = base_url.rstrip("/")
-        self.auth = KipuAuth(access_id, secret_key, app_id)
+        self.auth = KipuAuth(access_id, secret_key, app_id, version)
         self.timeout = timeout
         self.session: Optional[aiohttp.ClientSession] = None
 
     async def __aenter__(self):
         """Async context manager entry"""
+        # Explicit SSL verification for security
+        connector = aiohttp.TCPConnector(ssl=True)
         self.session = aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=self.timeout)
+            timeout=aiohttp.ClientTimeout(total=self.timeout),
+            connector=connector
         )
         return self
 

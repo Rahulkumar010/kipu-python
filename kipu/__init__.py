@@ -40,7 +40,7 @@ from .exceptions import (
 )
 from .flattener import JsonFlattener
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "Rahul"
 __email__ = "rahul01110100@gmail.com"
 __license__ = "MIT"

@@ -5,7 +5,26 @@ All notable changes to the Kipu API Python library will be documented in this fi
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.1] - 2025-06-05
+## [0.0.2] - 2026-01-19
+
+### Added
+- 🔒 **SECURITY.md**: Comprehensive security documentation for HIPAA compliance
+- 🧪 **V4 Authentication Tests**: Added tests for SHA256 authentication (API v4)
+- ✅ **Enhanced Test Coverage**: Added 3 new tests for V3/V4 authentication verification
+
+### Changed
+- 📝 **Documentation Improvements**: 
+  - Fixed syntax error in README.md code example
+  - Simplified kipu/README.md to avoid duplication
+  - Enhanced auth.py docstrings to clarify V3 (SHA1) and V4 (SHA256) support
+- 🔐 **Security Enhancements**: Added explicit SSL verification in HTTP client
+
+### Fixed
+- 🐛 **Test Fixes**: Added missing version parameter to all KipuAuth test initializations
+
+---
+
+## [0.0.1] - 2025-01-19
 
 ### Added
 - 🎉 Initial release of the Kipu API Python library

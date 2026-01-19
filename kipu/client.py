@@ -18,6 +18,7 @@ class KipuClient(BaseKipuClient):
         secret_key: str,
         app_id: str,
         base_url: str = "https://api.kipuapi.com",
+        version: int = 3,
         timeout: int = 30,
         auto_flatten: bool = True,
     ):
@@ -32,7 +33,7 @@ class KipuClient(BaseKipuClient):
             timeout: Request timeout in seconds
             auto_flatten: Automatically flatten nested JSON responses to DataFrame
         """
-        super().__init__(access_id, secret_key, app_id, base_url, timeout)
+        super().__init__(access_id, secret_key, app_id, base_url, version, timeout)
         self.auto_flatten = auto_flatten
         self.flattener = JsonFlattener()
 

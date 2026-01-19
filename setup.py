@@ -19,7 +19,7 @@ def read_requirements():
 
 setup(
     name="kipu-python",
-    version="0.0.1",
+    version="0.0.2",
     author="Rahul",
     author_email="rahul01110100@gmail.com",
     description="The Kipu Python library provides convenient access to the Kipu API (V3) from any Python 3.8+ application. The library includes HMAC SHA1 authentication, recursive JSON flattening capabilities and type definitions for most of the request params and response fields, and offers asynchronous clients powered by [asyncio].",

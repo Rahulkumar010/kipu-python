@@ -5,7 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 The Kipu Python library provides convenient access to the Kipu API from any Python 3.8+
-application. The library includes HMAC SHA1 authentication, recursive JSON flattening capabilities and type definitions for most of the request params and response fields,
+application. The library includes HMAC SHA1/SHA256 authentication, recursive JSON flattening capabilities and type definitions for most of the request params and response fields,
 and offers asynchronous clients powered by [asyncio].
 
 It is generated from our [KipuAPI V3 specification](https://api.kipuapi.com/api-docs/index.html)
@@ -13,7 +13,7 @@ It is generated from our [KipuAPI V3 specification](https://api.kipuapi.com/api-
 ## 🚀 Features
 
 - ✅ **Complete API Coverage**: All 80+ Kipu API V3 endpoints implemented
-- 🔐 **Secure Authentication**: HMAC SHA1 signature generation
+- 🔐 **Secure Authentication**: HMAC SHA1/SHA256 signature generation
 - 📊 **Automatic Flattening**: Converts nested JSON responses to pandas DataFrames
 - ⚡ **Async Support**: Built with asyncio for high performance
 - 🛡️ **Error Handling**: Comprehensive exception hierarchy
@@ -36,7 +36,8 @@ async def main():
     async with KipuClient(
         access_id="your_access_id",
         secret_key="your_secret_key", 
-        app_id="your_app_id"
+        app_id="your_app_id",
+        version=3
     ) as client:
         
         # Get patient census as flattened DataFrame
@@ -57,6 +58,7 @@ The library handles HMAC SHA1 signature generation automatically. You need three
 - `access_id`: Your API access identifier
 - `secret_key`: Your secret key for signature generation
 - `app_id`: Your application ID (also called recipient_id)
+- `version`: Your API version
 
 ## 📚 API Coverage
 
@@ -150,7 +152,7 @@ print(type(census_data))  # <class 'dict'> or <class 'list'>
 ```python
 # Disable auto-flattening globally
 async with KipuClient(
-    access_id, secret_key, app_id,
+    access_id, secret_key, app_id, version,
     auto_flatten=False
 ) as client:
     raw_data = await client.get_patients_census()  # Raw JSON
